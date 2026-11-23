@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Zero-TAF/ztaf-evidence/schemas/decision-record-store.schema.json",
+  "title": "Zero-TAF Decision-Record Store Export",
+  "description": "The export envelope of a hash-chained decision-record store: the records, and the head (count, last hash, RFC 6962-style batch root). The head lets a verifier check the whole export without trusting the exporter (ZT-NM-EVD-3). Field semantics: docs/evidence-store-specification-scope.md.",
+  "type": "object",
+  "required": ["zt_store_version", "records", "head"],
+  "properties": {
+    "zt_store_version": { "const": "0.1.0" },
+    "records": {
+      "type": "array",
+      "items": { "$ref": "https://github.com/Zero-TAF/ztaf-spec/schemas/decision-record.schema.json" }
+    },
+    "head": {
+      "type": "object",
+      "required": ["record_count", "last_record_hash", "batch_root"],
+      "properties": {
+        "record_count": { "type": "integer", "minimum": 0 },
+        "last_record_hash": {
+          "type": "string",
+          "description": "The last record's hash, or zt-genesis for an empty store."
+        },
+        "batch_root": {
+          "type": "string",
+          "description": "RFC 6962-style Merkle tree head over the record digests."
+        }
+      }
+    }
+  }
+}
